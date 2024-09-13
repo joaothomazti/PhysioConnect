@@ -12,7 +12,7 @@ using Physio.Infrastructure.Context;
 namespace Physio.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240911113018_InitialCreate")]
+    [Migration("20240913100116_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,13 +53,13 @@ namespace Physio.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9d87b2c9-57a2-41fa-b6e1-44a4bf69bf5f",
+                            Id = "8209e8a1-113a-4075-9884-60c53fc30a7b",
                             Name = "Client",
                             NormalizedName = "CLIENT"
                         },
                         new
                         {
-                            Id = "1dcd3c37-3ba5-4019-9bef-071feab7de8b",
+                            Id = "f27e9be5-a58c-428c-bbff-ed1cb34da3c8",
                             Name = "Physiotherapist",
                             NormalizedName = "PHYSIOTHERAPIST"
                         });
@@ -183,15 +183,15 @@ namespace Physio.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PhysiotherapistId")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("interval");
 
                     b.HasKey("Id");
 

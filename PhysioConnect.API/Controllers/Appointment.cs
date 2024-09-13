@@ -1,0 +1,103 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Physio.Application.Dtos.Appointment;
+using Physio.Application.Interfaces;
+using Physio.Application.Mappers;
+using Physio.Domain.Models;
+using PhysioConnect.API.Extensions;
+
+namespace PhysioConnect.API.Controllers
+{
+    [Route("api/appointment")]
+    [ApiController]
+    public class Appointment : ControllerBase
+    {
+        private readonly IAppointment _appointment;
+        private readonly UserManager<User> _userManager;
+
+        public Appointment(IAppointment appointment, UserManager<User> userManager)
+        {
+            _appointment = appointment;
+            _userManager = userManager;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateAppointmentDto appointment)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var username = User.GetUsername();
+                //var userRole = User.GetUserRole();
+
+                //if (userRole != "Client")
+                //    return Forbid();
+
+                var physiotherapistId = appointment.PhysiotherapistId;
+
+                var appointmentModel = appointment.ToAppointmentFromCreateDto(username, physiotherapistId);
+
+
+                await _appointment.CreateAsync(appointmentModel);
+                return CreatedAtAction(nameof(GetAppointmentById), new { id = appointmentModel.Id }, appointmentModel.ToAppointmentDto());
+
+
+            }
+            catch (Exception ex) 
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("{id:int}")]
+        [Authorize]
+        public async Task<IActionResult> GetAppointmentById([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var appointment = await _appointment.GetAppointmentById(id);
+
+            if(appointment == null)
+                return NotFound();
+
+            return Ok(appointment.ToAppointmentDto());
+
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAppointment()
+        {
+            try
+            {
+                var username = User.GetUserId(); 
+                var userRole = User.GetUserRole();
+
+                if (userRole == "Client")
+                {
+                    var appointments = await _appointment.GetAppointmentsByClientIdAsync(username);
+                    return Ok(appointments);
+                }
+                else if (userRole == "Physiotherapist")
+                {
+                    var appointments = await _appointment.GetAppointmentsByPhysiotherapistIdAsync(username);
+                    return Ok(appointments);
+                }
+                else
+                {
+                    return Forbid("Acesso não permitido.");
+                }
+
+            }
+            catch (Exception ex) 
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+    }
+}

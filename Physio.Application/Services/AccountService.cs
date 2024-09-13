@@ -24,15 +24,13 @@ namespace Physio.Application.Services
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == login.UserName);
             if (user == null)
-            {
                 return new ResultDto { Success = false, Errors = new[] { "Invalid Username!" } };
-            }
+
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
             if (!result.Succeeded)
-            {
                 return new ResultDto { Success = false, Errors = new[] { "Username not found and/or password incorrect" } };
-            }
+
 
             return new ResultDto
             {

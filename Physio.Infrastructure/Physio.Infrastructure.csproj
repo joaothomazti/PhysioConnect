@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Physio.Application\Physio.Application.csproj" />
     <ProjectReference Include="..\Physio.Domain\Physio.Domain.csproj" />
   </ItemGroup>
 

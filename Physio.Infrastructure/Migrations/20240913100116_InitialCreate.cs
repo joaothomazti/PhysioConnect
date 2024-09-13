@@ -82,10 +82,10 @@ namespace Physio.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ClientId = table.Column<string>(type: "text", nullable: false),
-                    PhysiotherapistId = table.Column<string>(type: "text", nullable: false)
+                    PhysiotherapistId = table.Column<string>(type: "text", nullable: false),
+                    IsCanceled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,8 +216,8 @@ namespace Physio.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1dcd3c37-3ba5-4019-9bef-071feab7de8b", null, "Physiotherapist", "PHYSIOTHERAPIST" },
-                    { "9d87b2c9-57a2-41fa-b6e1-44a4bf69bf5f", null, "Client", "CLIENT" }
+                    { "8209e8a1-113a-4075-9884-60c53fc30a7b", null, "Client", "CLIENT" },
+                    { "f27e9be5-a58c-428c-bbff-ed1cb34da3c8", null, "Physiotherapist", "PHYSIOTHERAPIST" }
                 });
 
             migrationBuilder.CreateIndex(

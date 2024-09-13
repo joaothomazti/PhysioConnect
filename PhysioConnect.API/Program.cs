@@ -8,6 +8,7 @@ using Physio.Application.Interfaces;
 using Physio.Application.Services;
 using Physio.Domain.Models;
 using Physio.Infrastructure.Context;
+using Physio.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,6 +89,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAppointment, AppointmentRepository>();
 
 var app = builder.Build();
 
