@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Physio.Application.Dtos.Account;
 using Physio.Application.Interfaces;
 
@@ -35,6 +36,18 @@ namespace PhysioConnect.API.Controllers
                 return BadRequest(result.Errors);
 
             return Ok(result.Data);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult CheckUserClaims()
+        {
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+            }
+
+            return Ok("Check console for claims output");
         }
 
     }

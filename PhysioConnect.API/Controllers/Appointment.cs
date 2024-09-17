@@ -6,6 +6,7 @@ using Physio.Application.Interfaces;
 using Physio.Application.Mappers;
 using Physio.Domain.Models;
 using PhysioConnect.API.Extensions;
+using System.Security.Claims;
 
 namespace PhysioConnect.API.Controllers
 {
@@ -15,15 +16,17 @@ namespace PhysioConnect.API.Controllers
     {
         private readonly IAppointment _appointment;
         private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public Appointment(IAppointment appointment, UserManager<User> userManager)
+        public Appointment(IAppointment appointment, UserManager<User> userManager, IUserRepository userRepository)
         {
             _appointment = appointment;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create([FromBody] CreateAppointmentDto appointment)
         {
             try
@@ -31,13 +34,9 @@ namespace PhysioConnect.API.Controllers
                 if(!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var username = User.GetUsername();
-                //var userRole = User.GetUserRole();
+                var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                //if (userRole != "Client")
-                //    return Forbid();
-
-                var physiotherapistId = appointment.PhysiotherapistId;
+                var physiotherapistId = appointment.PhysiotherapistId.ToString();
 
                 var appointmentModel = appointment.ToAppointmentFromCreateDto(username, physiotherapistId);
 
