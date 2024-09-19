@@ -28,15 +28,13 @@ namespace Physio.Infrastructure.Repository
         public async Task<List<Appointment>> GetAppointmentsByClientIdAsync(string clientId)
         {
             return await _context.Appointments
-                .Include(p => p.Physiotherapist)
-                .Where(a => a.ClientId == clientId && !a.IsCanceled)
+                .Where(a => a.ClientId == clientId)
                 .ToListAsync();
         }
-
+       
         public async Task<List<Appointment>> GetAppointmentsByPhysiotherapistIdAsync(string physiotherapistId)
         {
             return await _context.Appointments
-                .Include(c => c.ClientId)
                 .Where(a => a.PhysiotherapistId == physiotherapistId && !a.IsCanceled)
                 .ToListAsync();
         }

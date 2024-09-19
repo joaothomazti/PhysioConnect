@@ -37,18 +37,5 @@ namespace PhysioConnect.API.Controllers
 
             return Ok(result.Data);
         }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult CheckUserClaims()
-        {
-            foreach (var claim in User.Claims)
-            {
-                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-            }
-
-            return Ok("Check console for claims output");
-        }
-
     }
 }

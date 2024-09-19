@@ -11,7 +11,7 @@ namespace PhysioConnect.API.Extensions
 
         public static string GetUserId(this ClaimsPrincipal user)
         {
-            return user.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public static string GetUserRole(this ClaimsPrincipal user)

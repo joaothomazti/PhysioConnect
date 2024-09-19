@@ -34,12 +34,11 @@ namespace PhysioConnect.API.Controllers
                 if(!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.GetUserId();
 
                 var physiotherapistId = appointment.PhysiotherapistId.ToString();
 
-                var appointmentModel = appointment.ToAppointmentFromCreateDto(username, physiotherapistId);
-
+                var appointmentModel = appointment.ToAppointmentFromCreateDto(userId, physiotherapistId);
 
                 await _appointment.CreateAsync(appointmentModel);
                 return CreatedAtAction(nameof(GetAppointmentById), new { id = appointmentModel.Id }, appointmentModel.ToAppointmentDto());
@@ -74,17 +73,17 @@ namespace PhysioConnect.API.Controllers
         {
             try
             {
-                var username = User.GetUserId(); 
+                var userId = User.GetUserId(); 
                 var userRole = User.GetUserRole();
 
                 if (userRole == "Client")
                 {
-                    var appointments = await _appointment.GetAppointmentsByClientIdAsync(username);
+                    var appointments = await _appointment.GetAppointmentsByClientIdAsync(userId);
                     return Ok(appointments);
                 }
                 else if (userRole == "Physiotherapist")
                 {
-                    var appointments = await _appointment.GetAppointmentsByPhysiotherapistIdAsync(username);
+                    var appointments = await _appointment.GetAppointmentsByPhysiotherapistIdAsync(userId);
                     return Ok(appointments);
                 }
                 else
